@@ -73,6 +73,9 @@ function App() {
           <Route path="/todos/create" element={<AddTodo token={token} />
           }>
           </Route>
+          <Route path="/todos/:id/" element={<AddTodo token={token} />
+          }>
+          </Route>
           <Route path="/login" element={<Login login={login} />
           }>
           </Route>

@@ -29,6 +29,27 @@ const TodosList = (props) => {
     }
   };
 
+  const deleteTodo = (todoId) => {
+    TodoDataService.deleteTodo(todoId, props.token)
+      .then((response) => {
+        retrieveTodos();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const completeTodo = (todoId) => {
+    TodoDataService.completeTodo(todoId, props.token)
+      .then((response) => {
+        retrieveTodos();
+        console.log("completeTodo", todoId);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   return (
     <Container>
       {props.token == null || props.token === "" ? (
@@ -47,7 +68,11 @@ const TodosList = (props) => {
             return (
               <Card key={todo.id} className="mb-3">
                 <Card.Body>
-                  <div>
+                  <div
+                    className={`${
+                      todo.completed ? "text-decoration-line-through" : ""
+                    }`}
+                  >
                     <Card.Title>{todo.title}</Card.Title>
                     <Card.Text>
                       <b>Memo:</b> {todo.memo}
@@ -57,19 +82,25 @@ const TodosList = (props) => {
                       {moment(todo.created).format("Do MMMM YYYY")}
                     </Card.Text>
                   </div>
-                  <Link
-                    to={{
-                      pathname: "/todos/" + todo.id,
-                      state: {
-                        currentTodo: todo,
-                      },
-                    }}
+                  {!todo.completed && (
+                    <Link to={"/todos/" + todo.id} state={todo}>
+                      <Button variant="outline-info" className="me-2">
+                        Edit
+                      </Button>
+                    </Link>
+                  )}
+                  <Button
+                    variant="outline-danger"
+                    onClick={() => deleteTodo(todo.id)}
                   >
-                    <Button variant="outline-info" className="me-2">
-                      Edit
-                    </Button>
-                  </Link>
-                  <Button variant="outline-danger">Delete</Button>
+                    Delete
+                  </Button>
+                  <Button
+                    variant="outline-success"
+                    onClick={() => completeTodo(todo.id)}
+                  >
+                    Complete
+                  </Button>
                 </Card.Body>
               </Card>
             );

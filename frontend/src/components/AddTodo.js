@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TodoDataService from "../services/Todos";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -10,17 +10,21 @@ const AddTodo = (props) => {
   let initialTodoTitle = "";
   let initialTodoMemo = "";
 
-  if (props.location.state && props.location.state.currentTodo) {
+  const location = useLocation();
+  const todo = location.state
+
+  if (location.state) {
     editing = true;
-    initialTodoTitle = props.location.state.currentTodo.title;
-    initialTodoMemo = props.location.state.currentTodo.memo;
+    initialTodoTitle = todo.title;
+    initialTodoMemo = todo.memo;
+    console.log(todo)
   }
 
   const [title, setTitle] = useState(initialTodoTitle);
   const [memo, setMemo] = useState(initialTodoMemo);
   // keeps track if todo is submitted
   const [submitted, setSubmitted] = useState(false);
-  
+
   const onChangeTitle = (e) => {
     const title = e.target.value;
     setTitle(title);
@@ -40,7 +44,7 @@ const AddTodo = (props) => {
 
     if (editing) {
       TodoDataService.updateTodo(
-        props.location.state.currentTodo.id,
+        todo.id,
         data,
         props.token
       )
