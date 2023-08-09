@@ -69,8 +69,8 @@ function App() {
       <div className="container mt-4">
       <Routes>
           <Route exact path="/" element={<TodosList token={token} />} />
-          <Route path="/todos/create" render={(props)=>
-          <AddTodo {...props} token={token} />
+          <Route path="/todos" element={<TodosList token={token} />} />
+          <Route path="/todos/create" element={<AddTodo token={token} />
           }>
           </Route>
           <Route path="/login" element={<Login login={login} />
